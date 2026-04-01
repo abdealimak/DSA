@@ -16,4 +16,8 @@ int main(){
         }
         cout<<endl;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a236ce5 (initial commit)
