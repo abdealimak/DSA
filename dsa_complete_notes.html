@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DSA Complete Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',sans-serif;color:#1a1a1a;background:#f5f5f2;min-height:100vh}
+.app{max-width:900px;margin:0 auto;padding:1.25rem 1rem 3rem}
+h1{font-size:21px;font-weight:600;margin-bottom:2px}
+.sub{font-size:12px;color:#888;margin-bottom:1.2rem}
+.nav{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:1.4rem;background:#e6e6e2;padding:4px;border-radius:10px}
+.nav-btn{flex:1;min-width:fit-content;padding:7px 9px;border:none;background:transparent;border-radius:7px;font-family:'IBM Plex Sans',sans-serif;font-size:11.5px;font-weight:500;color:#666;cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn.active{background:#fff;color:#1a1a1a;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.page{display:none}.page.active{display:block}
+.sec{font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#999;margin:1.4rem 0 8px}
+.sec:first-child{margin-top:0}
+.card{background:#fff;border:1px solid #e2e2de;border-radius:11px;padding:13px 15px;margin-bottom:10px}
+.card-title{font-size:13.5px;font-weight:600;margin-bottom:6px}
+.card-body{font-size:12.5px;line-height:1.75;color:#444}
+.card-body strong{color:#1a1a1a;font-weight:500}
+.hl{border-left:2px solid;padding:9px 13px;border-radius:0 8px 8px 0;font-size:12.5px;line-height:1.7;margin:7px 0}
+.hl-blue{border-color:#378ADD;background:#EAF3FB;color:#333}
+.hl-green{border-color:#1D9E75;background:#EAF5EE;color:#333}
+.hl-red{border-color:#C0392B;background:#FCEAEA;color:#333}
+.hl-amber{border-color:#C47B1A;background:#FDF3E1;color:#333}
+.hl-purple{border-color:#7C5CBF;background:#F0EDFB;color:#333}
+.hl strong{color:#1a1a1a;font-weight:500}
+/* COMPLEXITY TABLE */
+.tbl-wrap{background:#fff;border:1px solid #e2e2de;border-radius:10px;overflow:hidden;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+thead tr{background:#f5f5f2}
+th{padding:8px 10px;text-align:left;font-weight:600;border-bottom:1px solid #e2e2de;color:#555;font-size:10.5px;letter-spacing:.02em;white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid #f0f0ec;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafaf8}
+.algo-name{font-weight:500;font-size:12.5px}
+.algo-sub{font-size:10px;color:#999;margin-top:1px}
+/* PILL BADGES */
+.pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:500;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.pg{background:#EAF5EE;color:#0D5C3A}  /* green – fast */
+.pb{background:#EAF3FB;color:#0C447C}  /* blue – log */
+.py{background:#FDF3E1;color:#633806}  /* amber – O(n) */
+.pr{background:#FCEAEA;color:#7B1818}  /* red – slow */
+.pp{background:#F0EDFB;color:#3C3489}  /* purple – aux */
+.badge{display:inline-block;font-size:10.5px;font-weight:500;padding:2px 8px;border-radius:999px;margin-right:3px}
+.bg{background:#EAF5EE;color:#0D5C3A}.bb{background:#EAF3FB;color:#0C447C}.br{background:#FCEAEA;color:#7B1818}.by{background:#FDF3E1;color:#633806}.bp{background:#F0EDFB;color:#3C3489}
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+/* DIAGRAM */
+.diagram-wrap{overflow-x:auto;margin:10px 0}
+.diagram{display:inline-flex;align-items:stretch;min-width:max-content}
+.mem-cell{display:flex;flex-direction:column;align-items:center;border:1.5px solid #ccc;min-width:50px;padding:7px 4px;background:#fff}
+.mem-cell:first-child{border-radius:6px 0 0 6px}.mem-cell:last-child{border-radius:0 6px 6px 0}
+.mem-cell+.mem-cell{border-left:none}
+.cell-val{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500}
+.cell-idx{font-size:9.5px;color:#888;margin-top:2px}
+.cell-addr{font-size:8.5px;color:#bbb;margin-top:1px;font-family:'IBM Plex Mono',monospace}
+.cell-hi{background:#EAF3FB;border-color:#378ADD}.cell-hi .cell-val{color:#0C447C}
+.cell-gr{background:#EAF5EE;border-color:#1D9E75}.cell-gr .cell-val{color:#0D5C3A}
+.cell-re{background:#FCEAEA;border-color:#C0392B}.cell-re .cell-val{color:#7B1818}
+/* LL */
+.ll-wrap{display:flex;align-items:center;flex-wrap:wrap;row-gap:10px}
+.ll-node{display:flex;border:1.5px solid #ccc;border-radius:7px;overflow:hidden;font-family:'IBM Plex Mono',monospace;font-size:11.5px}
+.ll-data{padding:7px 10px;background:#f5f5f2;border-right:1.5px solid #ccc;font-weight:500}
+.ll-next{padding:7px 9px;background:#fff;color:#888;font-size:10.5px}
+.ll-prev{padding:7px 9px;background:#EAF5EE;color:#0D5C3A;font-size:10.5px;border-right:1.5px solid #ccc}
+.ll-arrow{font-size:17px;color:#999;margin:0 4px;align-self:center}
+.ll-null{padding:7px 11px;background:#f5f5f2;border:1.5px dashed #ccc;border-radius:7px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#888}
+.ll-grp{display:flex;flex-direction:column;align-items:center}
+.ll-lbl{font-size:9.5px;color:#888;text-align:center;margin-top:3px}
+/* FORMULA */
+.formula{font-family:'IBM Plex Mono',monospace;background:#f5f5f2;border:1px solid #e2e2de;border-radius:6px;padding:9px 12px;font-size:11.5px;color:#1a1a1a;margin:7px 0;display:block;white-space:pre-wrap;line-height:1.65}
+/* KEY BOX */
+.key-wrap{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.key-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#555}
+.key-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+/* GRID 2D */
+.grid-2d{display:inline-grid;gap:2px;margin:6px 0}
+.grid-cell{width:38px;height:33px;display:flex;align-items:center;justify-content:center;border:1.5px solid #ccc;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:500;background:#f5f5f2}
+.grid-cell.hi{background:#EAF3FB;border-color:#378ADD;color:#0C447C}
+.grid-cell.gr{background:#EAF5EE;border-color:#1D9E75;color:#0D5C3A}
+.row-lbl{font-size:9.5px;color:#888;width:26px;display:flex;align-items:center;font-family:'IBM Plex Mono',monospace}
+/* QUIZ */
+.score-bar{background:#fff;border:1px solid #e2e2de;border-radius:10px;padding:11px 15px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.score-txt{font-size:12.5px;color:#666}
+.prog{background:#e2e2de;border-radius:999px;height:4px;width:120px;flex-shrink:0}
+.prog-f{height:4px;background:#378ADD;border-radius:999px;transition:width .3s}
+.q-card{background:#fff;border:1px solid #e2e2de;border-radius:11px;padding:15px}
+.q-text{font-size:13.5px;font-weight:500;margin-bottom:11px;line-height:1.6}
+.opts{display:grid;gap:6px}
+.opt{background:#fafaf8;border:1px solid #e2e2de;border-radius:8px;padding:9px 12px;cursor:pointer;font-size:12.5px;display:flex;align-items:flex-start;gap:8px;transition:border-color .12s,background .12s;text-align:left;width:100%;font-family:'IBM Plex Sans',sans-serif;color:#1a1a1a}
+.opt:hover:not(:disabled){border-color:#999;background:#efefe9}
+.opt:disabled{cursor:default}
+.opt.correct{border-color:#1D9E75;background:#EAF5EE;color:#0D5C3A}
+.opt.wrong{border-color:#C0392B;background:#FCEAEA;color:#7B1818}
+.opt-l{font-size:10px;min-width:17px;height:17px;border-radius:3px;background:#e6e6e2;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0;margin-top:2px}
+.opt.correct .opt-l{background:#1D9E75;color:#fff}
+.opt.wrong .opt-l{background:#C0392B;color:#fff}
+.exp-box{margin-top:9px;background:#EAF3FB;border-left:2px solid #378ADD;border-radius:0 7px 7px 0;padding:9px 12px;font-size:12px;line-height:1.75;color:#333}
+.exp-box strong{color:#1a1a1a;font-weight:500}
+.next-btn{margin-top:11px;padding:8px 18px;border:1px solid #ccc;border-radius:8px;background:#f5f5f2;font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;cursor:pointer;color:#1a1a1a;font-weight:500}
+.next-btn:hover{background:#eee}
+.result-box{background:#fff;border:1px solid #e2e2de;border-radius:11px;padding:2rem;text-align:center}
+.big{font-size:44px;font-weight:600;margin:.4rem 0}
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:.9rem}
+.stat-box{background:#f5f5f2;border-radius:8px;padding:9px;text-align:center}
+.stat-box .sv{font-size:18px;font-weight:600}
+.stat-box .sl{font-size:10.5px;color:#888;margin-top:2px}
+@media(max-width:540px){.two-col{grid-template-columns:1fr}.nav-btn{font-size:10.5px;padding:6px 6px}}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>DSA Complete Notes</h1>
+<p class="sub">From your cheat sheet + full explanations · Sorting · Arrays · Linked Lists · Strings · Search · Quiz</p>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="show('complexity',this)">📊 Complexity Tables</button>
+  <button class="nav-btn" onclick="show('concepts',this)">🔒 Stability & In-place</button>
+  <button class="nav-btn" onclick="show('arrays',this)">📦 Arrays 1D/2D/3D</button>
+  <button class="nav-btn" onclick="show('linkedlist',this)">🔗 Linked Lists</button>
+  <button class="nav-btn" onclick="show('strings',this)">📝 Strings</button>
+  <button class="nav-btn" onclick="show('quiz',this)">🧠 Test Yourself</button>
+</div>
+
+<!-- ==================== COMPLEXITY TABLES ==================== -->
+<div id="pg-complexity" class="page active">
+
+<div class="key-wrap">
+  <span style="font-size:11px;font-weight:600;color:#555;margin-right:3px">Colour key:</span>
+  <span class="key-item"><span class="key-dot" style="background:#1D9E75"></span>O(1) · O(log n) — fast</span>
+  <span class="key-item"><span class="key-dot" style="background:#378ADD"></span>O(n log n) — good</span>
+  <span class="key-item"><span class="key-dot" style="background:#C47B1A"></span>O(n) — moderate</span>
+  <span class="key-item"><span class="key-dot" style="background:#C0392B"></span>O(n²) — slow</span>
+  <span class="key-item"><span class="key-dot" style="background:#7C5CBF"></span>Auxiliary space</span>
+</div>
+
+<p class="sec">Sorting algorithms</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space (aux)</th><th>Stable?</th><th>Why (short)</th></tr></thead>
+<tbody>
+<tr>
+  <td><div class="algo-name">Bubble Sort</div><div class="algo-sub">with swapped flag</div></td>
+  <td><span class="pill py">O(n)</span></td>
+  <td><span class="pill pr">O(n²)</span></td>
+  <td><span class="pill pr">O(n²)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="color:#1D9E75">✅</td>
+  <td style="font-size:11px;color:#555">Adjacent swaps only. Best O(n) needs swapped flag.</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Selection Sort</div></td>
+  <td><span class="pill pr">O(n²)</span></td>
+  <td><span class="pill pr">O(n²)</span></td>
+  <td><span class="pill pr">O(n²)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="color:#C0392B">❌</td>
+  <td style="font-size:11px;color:#555">Always full scan. At most n-1 swaps.</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Insertion Sort</div></td>
+  <td><span class="pill pg">O(n)</span></td>
+  <td><span class="pill pr">O(n²)</span></td>
+  <td><span class="pill pr">O(n²)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="color:#1D9E75">✅</td>
+  <td style="font-size:11px;color:#555">Shifts only as needed. Best on nearly-sorted.</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Merge Sort</div></td>
+  <td><span class="pill pb">O(n log n)</span></td>
+  <td><span class="pill pb">O(n log n)</span></td>
+  <td><span class="pill pb">O(n log n)</span></td>
+  <td><span class="pill pp">O(n)</span></td>
+  <td style="color:#1D9E75">✅</td>
+  <td style="font-size:11px;color:#555">Divide & merge halves. Merge + insertion hybrid (Timsort).</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Quick Sort</div><div class="algo-sub">random/median-3 pivot</div></td>
+  <td><span class="pill pb">O(n log n)</span></td>
+  <td><span class="pill pb">O(n log n)</span></td>
+  <td><span class="pill pr">O(n²)</span></td>
+  <td><span class="pill pg">O(log n)</span></td>
+  <td style="color:#C0392B">❌</td>
+  <td style="font-size:11px;color:#555">Pivot partitioning. Picks pivot, partitions smaller left / larger right, recurses on each side.</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Heap Sort</div></td>
+  <td><span class="pill pb">O(n log n)</span></td>
+  <td><span class="pill pb">O(n log n)</span></td>
+  <td><span class="pill pb">O(n log n)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="color:#C0392B">❌</td>
+  <td style="font-size:11px;color:#555">Builds a max-heap, repeatedly extracts the max to produce a sorted array in-place.</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Counting Sort</div></td>
+  <td><span class="pill py">O(n+k)</span></td>
+  <td><span class="pill py">O(n+k)</span></td>
+  <td><span class="pill py">O(n+k)</span></td>
+  <td><span class="pill pp">O(n+k)</span></td>
+  <td style="color:#1D9E75">✅</td>
+  <td style="font-size:11px;color:#555">Frequency count array. k = range of values.</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Radix Sort</div></td>
+  <td><span class="pill py">O(nk)</span></td>
+  <td><span class="pill py">O(nk)</span></td>
+  <td><span class="pill py">O(nk)</span></td>
+  <td><span class="pill pp">O(n+k)</span></td>
+  <td style="color:#1D9E75">✅</td>
+  <td style="font-size:11px;color:#555">Digit-by-digit sort (LSD→MSD). Sorts integers digit by digit using a stable sub-sort each pass.</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Tim Sort</div><div class="algo-sub">Python & Java default</div></td>
+  <td><span class="pill pg">O(n)</span></td>
+  <td><span class="pill pb">O(n log n)</span></td>
+  <td><span class="pill pb">O(n log n)</span></td>
+  <td><span class="pill pp">O(n)</span></td>
+  <td style="color:#1D9E75">✅</td>
+  <td style="font-size:11px;color:#555">Merge + insertion hybrid. Splits into natural runs, sorts each with insertion, merges.</td>
+</tr>
+</tbody>
+</table></div>
+
+<div class="hl hl-amber" style="margin-top:6px"><strong>k</strong> = range of values (Counting Sort) or number of digits (Radix Sort). When k is small, these non-comparison sorts beat O(n log n).</div>
+
+<p class="sec">Arrays operations</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Operation</th><th>Best</th><th>Avg</th><th>Worst</th><th>Space</th><th>Why (short)</th><th>What it does</th></tr></thead>
+<tbody>
+<tr>
+  <td class="algo-name">Access</td>
+  <td><span class="pill pg">O(1)</span></td><td><span class="pill pg">O(1)</span></td><td><span class="pill pg">O(1)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="font-size:11px;color:#555">Index-based address</td>
+  <td style="font-size:11px;color:#555">Read or write any element directly by index — no traversal needed</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Insert at end</div><div class="algo-sub">dynamic array</div></td>
+  <td><span class="pill pg">O(1)</span></td><td><span class="pill pg">O(1)</span></td><td><span class="pill py">O(n)*</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="font-size:11px;color:#555">Amortised resize rare</td>
+  <td style="font-size:11px;color:#555">Append to end; fast unless backing array is full and must resize (copies all elements)</td>
+</tr>
+<tr>
+  <td class="algo-name">Insert at middle</td>
+  <td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="font-size:11px;color:#555">Shift elements right</td>
+  <td style="font-size:11px;color:#555">Elements after the insertion point must all shift right to make room</td>
+</tr>
+<tr>
+  <td class="algo-name">Delete at middle</td>
+  <td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="font-size:11px;color:#555">Shift elements left</td>
+  <td style="font-size:11px;color:#555">Elements after the deletion point must all shift left to close the gap</td>
+</tr>
+</tbody>
+</table></div>
+<p style="font-size:10.5px;color:#888;margin-top:4px">* dynamic array is amortised O(1) — only occasionally O(n) when backing array doubles in size</p>
+
+<p class="sec">Singly Linked List operations</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Operation</th><th>Best</th><th>Avg</th><th>Worst</th><th>Space</th><th>Why (short)</th><th>What it does</th></tr></thead>
+<tbody>
+<tr>
+  <td class="algo-name">Access / Search</td>
+  <td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="font-size:11px;color:#555">No random access</td>
+  <td style="font-size:11px;color:#555">Must traverse from HEAD one link at a time to reach an arbitrary element</td>
+</tr>
+<tr>
+  <td class="algo-name">Insert at Head</td>
+  <td><span class="pill pg">O(1)</span></td><td><span class="pill pg">O(1)</span></td><td><span class="pill pg">O(1)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="font-size:11px;color:#555">Update head pointer</td>
+  <td style="font-size:11px;color:#555">New node points to current head; update the head pointer — no traversal needed</td>
+</tr>
+<tr>
+  <td class="algo-name">Insert at Tail</td>
+  <td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="font-size:11px;color:#555">Walk to last node</td>
+  <td style="font-size:11px;color:#555">Must traverse all n nodes to reach the tail before appending</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Delete (known prev)</div><div class="algo-sub">you have predecessor node</div></td>
+  <td><span class="pill pg">O(1)</span></td><td><span class="pill pg">O(1)</span></td><td><span class="pill pg">O(1)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="font-size:11px;color:#555">Relink one pointer</td>
+  <td style="font-size:11px;color:#555">Given the previous node, redirect its next pointer to skip the target — one pointer update</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Delete (search first)</div><div class="algo-sub">find the node first</div></td>
+  <td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="font-size:11px;color:#555">Traverse to find node</td>
+  <td style="font-size:11px;color:#555">Must scan from head to locate the node before deleting it</td>
+</tr>
+</tbody>
+</table></div>
+
+<p class="sec">Search algorithms</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Algorithm</th><th>Best</th><th>Avg</th><th>Worst</th><th>Space</th><th>Why (short)</th><th>What it does</th></tr></thead>
+<tbody>
+<tr>
+  <td class="algo-name">Linear Search</td>
+  <td><span class="pill pg">O(1)</span></td><td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="font-size:11px;color:#555">Check each element</td>
+  <td style="font-size:11px;color:#555">Scans every element one by one until target found or list exhausted. Works on unsorted data.</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Binary Search</div><div class="algo-sub">iterative — sorted only</div></td>
+  <td><span class="pill pg">O(1)</span></td><td><span class="pill pg">O(log n)</span></td><td><span class="pill pg">O(log n)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="font-size:11px;color:#555">Halves search space</td>
+  <td style="font-size:11px;color:#555">Compares target to middle of a sorted array, discards half that can't contain it, repeats.</td>
+</tr>
+<tr>
+  <td><div class="algo-name">Binary Search</div><div class="algo-sub">recursive</div></td>
+  <td><span class="pill pg">O(1)</span></td><td><span class="pill pg">O(log n)</span></td><td><span class="pill pg">O(log n)</span></td>
+  <td><span class="pill pg">O(log n)</span></td>
+  <td style="font-size:11px;color:#555">Halves search space</td>
+  <td style="font-size:11px;color:#555">Same logic as iterative but uses O(log n) call stack instead of O(1)</td>
+</tr>
+</tbody>
+</table></div>
+
+<p class="sec">Strings operations (from your cheat sheet)</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Operation</th><th>Best</th><th>Avg</th><th>Worst</th><th>Space</th><th>Why (short)</th><th>What it does</th></tr></thead>
+<tbody>
+<tr>
+  <td class="algo-name">Access / Length</td>
+  <td><span class="pill pg">O(1)</span></td><td><span class="pill pg">O(1)</span></td><td><span class="pill pg">O(1)</span></td>
+  <td><span class="pill pp">O(n)</span></td>
+  <td style="font-size:11px;color:#555">Stored with length</td>
+  <td style="font-size:11px;color:#555">Modern languages store string length + character access is index-based like an array</td>
+</tr>
+<tr>
+  <td class="algo-name">Concatenation</td>
+  <td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td>
+  <td><span class="pill pp">O(n)</span></td>
+  <td style="font-size:11px;color:#555">New string allocation</td>
+  <td style="font-size:11px;color:#555">A new string of combined length must be allocated and both strings copied into it</td>
+</tr>
+<tr>
+  <td class="algo-name">Naive substring</td>
+  <td><span class="pill py">O(n)</span></td><td><span class="pill py">O(n)</span></td><td><span class="pill pr">O(nm)</span></td>
+  <td><span class="pill pp">O(1)</span></td>
+  <td style="font-size:11px;color:#555">Char-by-char compare</td>
+  <td style="font-size:11px;color:#555">Slides a window over the text and compares against the pattern at each position</td>
+</tr>
+<tr>
+  <td class="algo-name">KMP Search</td>
+  <td><span class="pill py">O(n+m)</span></td><td><span class="pill py">O(n+m)</span></td><td><span class="pill py">O(n+m)</span></td>
+  <td><span class="pill pp">O(m)</span></td>
+  <td style="font-size:11px;color:#555">Prefix table skips</td>
+  <td style="font-size:11px;color:#555">Precomputes a failure function to skip redundant comparisons; linear O(n+m) search</td>
+</tr>
+</tbody>
+</table></div>
+
+</div><!-- end complexity page -->
+
+<!-- ==================== STABILITY & IN-PLACE ==================== -->
+<div id="pg-concepts" class="page">
+<p class="sec">What is Stability?</p>
+<div class="card">
+  <div class="card-title">🔒 Stable Sort — definition</div>
+  <div class="card-body">A sorting algorithm is <strong>stable</strong> if, when two elements have the <strong>same value (key)</strong>, their <strong>relative order is preserved</strong> after sorting. Whichever came first in the original array still comes first in the sorted output.</div>
+</div>
+<div class="hl hl-blue"><strong>Real example:</strong> Sort students by grade. Two students both scored 85. A stable sort keeps them in their original relative order (e.g. alphabetical). An unstable sort can scramble them.</div>
+
+<div class="two-col" style="margin:10px 0">
+<div>
+  <p style="font-size:11px;font-weight:500;margin-bottom:5px;color:#888">Original array (3a came before 3b)</p>
+  <div class="diagram-wrap"><div class="diagram">
+    <div class="mem-cell cell-hi"><span class="cell-val">3a</span><span class="cell-idx">idx 0</span></div>
+    <div class="mem-cell"><span class="cell-val">1</span><span class="cell-idx">idx 1</span></div>
+    <div class="mem-cell cell-hi"><span class="cell-val">3b</span><span class="cell-idx">idx 2</span></div>
+    <div class="mem-cell"><span class="cell-val">2</span><span class="cell-idx">idx 3</span></div>
+  </div></div>
+</div>
+<div>
+  <p style="font-size:11px;font-weight:500;margin-bottom:5px;color:#1D9E75">✅ Stable — 3a still before 3b</p>
+  <div class="diagram-wrap"><div class="diagram">
+    <div class="mem-cell"><span class="cell-val">1</span><span class="cell-idx">idx 0</span></div>
+    <div class="mem-cell"><span class="cell-val">2</span><span class="cell-idx">idx 1</span></div>
+    <div class="mem-cell cell-gr"><span class="cell-val">3a</span><span class="cell-idx">idx 2</span></div>
+    <div class="mem-cell cell-gr"><span class="cell-val">3b</span><span class="cell-idx">idx 3</span></div>
+  </div></div>
+</div>
+</div>
+<div style="margin-bottom:10px">
+  <p style="font-size:11px;font-weight:500;margin-bottom:5px;color:#C0392B">❌ Unstable — 3b now before 3a</p>
+  <div class="diagram-wrap"><div class="diagram">
+    <div class="mem-cell"><span class="cell-val">1</span><span class="cell-idx">idx 0</span></div>
+    <div class="mem-cell"><span class="cell-val">2</span><span class="cell-idx">idx 1</span></div>
+    <div class="mem-cell cell-re"><span class="cell-val">3b</span><span class="cell-idx">idx 2</span></div>
+    <div class="mem-cell cell-re"><span class="cell-val">3a</span><span class="cell-idx">idx 3</span></div>
+  </div></div>
+</div>
+
+<div class="two-col">
+  <div class="hl hl-green"><strong>✅ Stable:</strong> Bubble, Insertion, Merge, Tim, Counting, Radix Sort</div>
+  <div class="hl hl-red"><strong>❌ Unstable:</strong> Selection, Quick, Heap Sort</div>
+</div>
+
+<p class="sec">What is In-Place?</p>
+<div class="card">
+  <div class="card-title">💾 In-Place — definition</div>
+  <div class="card-body">An algorithm is <strong>in-place</strong> if it uses only <strong>O(1) auxiliary space</strong> — it rearranges elements within the original input using only a few extra variables. It does NOT need a separate buffer proportional to n.</div>
+</div>
+<div class="two-col">
+  <div class="hl hl-green"><strong>✅ In-place (O(1) aux):</strong><br>Bubble, Selection, Insertion, Heap, Quick Sort<br><span style="font-size:11px">Only need a temp variable + loop counters</span></div>
+  <div class="hl hl-red"><strong>❌ NOT in-place (O(n) aux):</strong><br>Merge Sort — the merge step needs an auxiliary array of size n. You cannot merge two sorted halves without extra space.</div>
+</div>
+<div class="hl hl-amber"><strong>Note:</strong> Quick Sort is "in-place" for data but uses O(log n) recursion stack. The stack is execution overhead, not a data buffer — so it's still called in-place.</div>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Algorithm</th><th>Stable?</th><th>In-place?</th><th>Aux Space</th><th>Why not stable / not in-place</th></tr></thead>
+<tbody>
+<tr><td>Bubble Sort</td><td style="color:#1D9E75">✅ Yes</td><td style="color:#1D9E75">✅ Yes</td><td><span class="pill pp">O(1)</span></td><td style="font-size:11px;color:#555">Only adjacent swaps — equal elements never leap past each other</td></tr>
+<tr><td>Selection Sort</td><td style="color:#C0392B">❌ No</td><td style="color:#1D9E75">✅ Yes</td><td><span class="pill pp">O(1)</span></td><td style="font-size:11px;color:#555">Long-distance swap of minimum can skip past equal elements</td></tr>
+<tr><td>Insertion Sort</td><td style="color:#1D9E75">✅ Yes</td><td style="color:#1D9E75">✅ Yes</td><td><span class="pill pp">O(1)</span></td><td style="font-size:11px;color:#555">Only shifts right while strictly greater — equal elements never swapped</td></tr>
+<tr><td>Merge Sort</td><td style="color:#1D9E75">✅ Yes</td><td style="color:#C0392B">❌ No</td><td><span class="pill pp">O(n)</span></td><td style="font-size:11px;color:#555">Merge step requires auxiliary array of size n</td></tr>
+<tr><td>Quick Sort</td><td style="color:#C0392B">❌ No</td><td style="color:#1D9E75">✅ Yes</td><td><span class="pill pg">O(log n) stack</span></td><td style="font-size:11px;color:#555">Partition can jump equal elements past each other</td></tr>
+<tr><td>Heap Sort</td><td style="color:#C0392B">❌ No</td><td style="color:#1D9E75">✅ Yes</td><td><span class="pill pp">O(1)</span></td><td style="font-size:11px;color:#555">Heap operations rearrange non-adjacent elements</td></tr>
+<tr><td>Tim Sort</td><td style="color:#1D9E75">✅ Yes</td><td style="color:#C0392B">❌ No</td><td><span class="pill pp">O(n)</span></td><td style="font-size:11px;color:#555">Merge step inherited from Merge Sort</td></tr>
+<tr><td>Counting Sort</td><td style="color:#1D9E75">✅ Yes</td><td style="color:#C0392B">❌ No</td><td><span class="pill pp">O(n+k)</span></td><td style="font-size:11px;color:#555">Needs count array (size k) and output array (size n)</td></tr>
+<tr><td>Radix Sort</td><td style="color:#1D9E75">✅ Yes</td><td style="color:#C0392B">❌ No</td><td><span class="pill pp">O(n+k)</span></td><td style="font-size:11px;color:#555">Uses Counting Sort internally as stable sub-sort</td></tr>
+</tbody></table></div>
+</div><!-- end concepts -->
+
+<!-- ==================== ARRAYS ==================== -->
+<div id="pg-arrays" class="page">
+<p class="sec">1D Array</p>
+<div class="card">
+  <div class="card-body">A <strong>1D array</strong> is a <strong>single row of elements in contiguous memory</strong>. Every element is the same type with an index starting at 0. You can jump directly to any element using index arithmetic — no searching.</div>
+</div>
+<div class="diagram-wrap">
+  <p style="font-size:10.5px;color:#888;margin-bottom:4px">int arr[5] = {10,20,30,40,50} — 4 bytes each</p>
+  <div class="diagram">
+    <div class="mem-cell cell-hi"><span class="cell-val">10</span><span class="cell-idx">idx 0</span><span class="cell-addr">0x1000</span></div>
+    <div class="mem-cell"><span class="cell-val">20</span><span class="cell-idx">idx 1</span><span class="cell-addr">0x1004</span></div>
+    <div class="mem-cell"><span class="cell-val">30</span><span class="cell-idx">idx 2</span><span class="cell-addr">0x1008</span></div>
+    <div class="mem-cell"><span class="cell-val">40</span><span class="cell-idx">idx 3</span><span class="cell-addr">0x100C</span></div>
+    <div class="mem-cell"><span class="cell-val">50</span><span class="cell-idx">idx 4</span><span class="cell-addr">0x1010</span></div>
+  </div>
+</div>
+<code class="formula">Address of arr[i] = base_address + i × element_size
+arr[3] = 0x1000 + 3×4 = 0x100C    → O(1) single arithmetic step</code>
+<div class="hl hl-blue"><strong>Why O(1) access?</strong> The CPU computes the address arithmetically in one step. No loop, no search — just maths. This is the defining superpower of arrays and why they beat linked lists for random access.</div>
+
+<p class="sec">2D Array</p>
+<div class="card">
+  <div class="card-body">A <strong>2D array = array of arrays</strong> — a <strong>grid of rows × columns</strong>. Access with <strong>arr[row][col]</strong>. Stored in a flat 1D memory block using <strong>row-major order</strong>: entire Row 0 first, then Row 1, etc.</div>
+</div>
+<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;margin:10px 0">
+<div>
+  <p style="font-size:10.5px;color:#888;margin-bottom:5px">3 rows × 4 cols visual</p>
+  <div style="display:flex;gap:3px;align-items:center">
+    <div>
+      <div style="height:24px"></div>
+      <div class="row-lbl">row 0</div><div class="row-lbl" style="margin-top:2px">row 1</div><div class="row-lbl" style="margin-top:2px">row 2</div>
+    </div>
+    <div>
+      <div style="display:flex;gap:2px;margin-bottom:3px">
+        <div style="width:38px;text-align:center;font-size:9.5px;color:#888">col 0</div>
+        <div style="width:38px;text-align:center;font-size:9.5px;color:#888">col 1</div>
+        <div style="width:38px;text-align:center;font-size:9.5px;color:#888">col 2</div>
+        <div style="width:38px;text-align:center;font-size:9.5px;color:#888">col 3</div>
+      </div>
+      <div class="grid-2d" style="grid-template-columns:repeat(4,38px)">
+        <div class="grid-cell hi">1</div><div class="grid-cell">2</div><div class="grid-cell">3</div><div class="grid-cell">4</div>
+        <div class="grid-cell">5</div><div class="grid-cell hi">6</div><div class="grid-cell">7</div><div class="grid-cell">8</div>
+        <div class="grid-cell">9</div><div class="grid-cell">10</div><div class="grid-cell hi">11</div><div class="grid-cell">12</div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:9.5px;color:#378ADD;margin-top:3px">Blue = main diagonal [0][0],[1][1],[2][2]</p>
+</div>
+<div style="flex:1;min-width:200px">
+  <p style="font-size:10.5px;color:#888;margin-bottom:4px">Memory layout (row-major)</p>
+  <div class="diagram-wrap"><div class="diagram" style="flex-wrap:wrap;max-width:250px">
+    <div class="mem-cell cell-gr" style="min-width:38px"><span class="cell-val" style="font-size:11px">1</span><span class="cell-idx">[0][0]</span></div>
+    <div class="mem-cell cell-gr" style="min-width:38px"><span class="cell-val" style="font-size:11px">2</span><span class="cell-idx">[0][1]</span></div>
+    <div class="mem-cell cell-gr" style="min-width:38px"><span class="cell-val" style="font-size:11px">3</span><span class="cell-idx">[0][2]</span></div>
+    <div class="mem-cell cell-gr" style="min-width:38px"><span class="cell-val" style="font-size:11px">4</span><span class="cell-idx">[0][3]</span></div>
+    <div class="mem-cell cell-hi" style="min-width:38px"><span class="cell-val" style="font-size:11px">5</span><span class="cell-idx">[1][0]</span></div>
+    <div class="mem-cell cell-hi" style="min-width:38px"><span class="cell-val" style="font-size:11px">6</span><span class="cell-idx">[1][1]</span></div>
+    <div class="mem-cell cell-hi" style="min-width:38px"><span class="cell-val" style="font-size:11px">7</span><span class="cell-idx">[1][2]</span></div>
+    <div class="mem-cell cell-hi" style="min-width:38px"><span class="cell-val" style="font-size:11px">8</span><span class="cell-idx">[1][3]</span></div>
+    <div class="mem-cell" style="min-width:38px"><span class="cell-val" style="font-size:11px">9</span><span class="cell-idx">[2][0]</span></div>
+    <div class="mem-cell" style="min-width:38px"><span class="cell-val" style="font-size:11px">10</span><span class="cell-idx">[2][1]</span></div>
+    <div class="mem-cell" style="min-width:38px"><span class="cell-val" style="font-size:11px">11</span><span class="cell-idx">[2][2]</span></div>
+    <div class="mem-cell" style="min-width:38px"><span class="cell-val" style="font-size:11px">12</span><span class="cell-idx">[2][3]</span></div>
+  </div></div>
+  <p style="font-size:10px;color:#888;margin-top:3px">Green=Row0 · Blue=Row1 · White=Row2</p>
+</div>
+</div>
+<code class="formula">Address of arr[i][j] = base + (i × num_cols + j) × element_size
+For 3×4 array: arr[1][2] → offset = (1×4 + 2)×4 = 24 bytes from base</code>
+<div class="hl hl-amber"><strong>Uses:</strong> Matrix maths · Game boards · Image pixels [row][col] · DP tables (LCS, knapsack) · Graph adjacency matrix</div>
+
+<p class="sec">3D Array</p>
+<div class="card">
+  <div class="card-body">A <strong>3D array = stack of 2D grids</strong>. Think floors of a building, each with a grid of rooms. Three indices: <strong>arr[depth][row][col]</strong>.</div>
+</div>
+<code class="formula">Address of arr[d][r][c] = base + (d×R×C + r×C + c) × element_size
+For 2×2×3: arr[1][0][2] → offset = 1×6 + 0×3 + 2 = 8 elements from base</code>
+<div class="hl hl-blue"><strong>Uses:</strong> RGB images (height×width×3 channels) · Video (frames×height×width) · 3D games (x×y×z) · Scientific simulations (voxels)</div>
+
+<div class="tbl-wrap" style="margin-top:12px">
+<table><thead><tr><th>Dimension</th><th>Indices</th><th>Analogy</th><th>Space</th><th>Common use</th></tr></thead>
+<tbody>
+<tr><td>1D</td><td>arr[i]</td><td>Row of lockers</td><td>O(n)</td><td>List, stack, queue, string</td></tr>
+<tr><td>2D</td><td>arr[i][j]</td><td>Spreadsheet / grid</td><td>O(n²)</td><td>Matrix, DP table, image pixels</td></tr>
+<tr><td>3D</td><td>arr[i][j][k]</td><td>Building floors</td><td>O(n³)</td><td>RGB images, video, voxels</td></tr>
+</tbody></table></div>
+</div><!-- end arrays -->
+
+<!-- ==================== LINKED LISTS ==================== -->
+<div id="pg-linkedlist" class="page">
+<p class="sec">Singly Linked List — structure</p>
+<div class="card">
+  <div class="card-body">Each <strong>node</strong> stores: <strong>data</strong> + <strong>next pointer</strong>. Nodes are scattered in memory (not contiguous). The list starts at <strong>HEAD</strong>; ends at a node whose next = <strong>NULL</strong>. No random access — to reach node k, traverse k times from HEAD.</div>
+</div>
+<div class="diagram-wrap" style="margin:10px 0">
+  <p style="font-size:10.5px;color:#378ADD;font-family:'IBM Plex Mono',monospace;margin-bottom:5px">HEAD</p>
+  <div class="ll-wrap">
+    <div class="ll-grp"><div class="ll-node"><div class="ll-data">10</div><div class="ll-next">→0x204</div></div><div class="ll-lbl">Node1·HEAD<br>addr:0x100</div></div>
+    <div class="ll-arrow">→</div>
+    <div class="ll-grp"><div class="ll-node"><div class="ll-data">20</div><div class="ll-next">→0x380</div></div><div class="ll-lbl">Node2<br>addr:0x204</div></div>
+    <div class="ll-arrow">→</div>
+    <div class="ll-grp"><div class="ll-node"><div class="ll-data">30</div><div class="ll-next">→0x512</div></div><div class="ll-lbl">Node3<br>addr:0x380</div></div>
+    <div class="ll-arrow">→</div>
+    <div class="ll-grp"><div class="ll-node"><div class="ll-data">40</div><div class="ll-next">NULL</div></div><div class="ll-lbl">Node4·TAIL<br>addr:0x512</div></div>
+  </div>
+</div>
+<div class="hl hl-blue"><strong>Why O(n) access?</strong> There's no formula to jump directly — you must follow next pointers one-by-one. To reach Node 4: HEAD(0x100)→0x204→0x380→0x512. That's 3 hops. Worst case: n hops.</div>
+
+<p class="sec">Key algorithms</p>
+<div class="card">
+  <div class="card-title">🔄 Reverse in-place — 3 pointer technique · O(n) time · O(1) space</div>
+  <div class="card-body">Three pointers: <strong>prev=NULL, curr=HEAD, next</strong>. Each step: save next → reverse curr.next → advance both.</div>
+  <code class="formula">Before: 10→20→30→NULL (HEAD=10)
+Step 1: save next=20; 10.next=NULL; prev=10; curr=20
+Step 2: save next=30; 20.next=10; prev=20; curr=30
+Step 3: save next=NULL; 30.next=20; prev=30; curr=NULL
+After:  30→20→10→NULL (HEAD=prev=30) ✓</code>
+</div>
+<div class="card">
+  <div class="card-title">🐢🐇 Floyd's Algorithm — Cycle detect + Find middle · O(n) time · O(1) space</div>
+  <div class="card-body">Slow moves 1 step, fast moves 2 steps.<br><strong>Cycle:</strong> if they meet → cycle exists. If fast hits NULL → no cycle.<br><strong>Middle:</strong> when fast hits NULL/NULL.next, slow is at the middle node.</div>
+</div>
+<div class="card">
+  <div class="card-title">📍 kth from end — Two pointer gap · O(n) time · O(1) space</div>
+  <div class="card-body">Move ptr1 k steps ahead. Move both ptr1 and ptr2 together until ptr1 = NULL. ptr2 is now at the kth node from the end.</div>
+</div>
+
+<p class="sec">Doubly Linked List</p>
+<div class="card">
+  <div class="card-body">Each node has: <strong>prev ← data → next</strong>. Bidirectional traversal. HEAD.prev = NULL; TAIL.next = NULL.</div>
+</div>
+<div class="diagram-wrap" style="margin:10px 0">
+  <div class="ll-wrap">
+    <div class="ll-null">NULL</div><div class="ll-arrow">←</div>
+    <div class="ll-grp"><div class="ll-node"><div class="ll-prev">←NULL</div><div class="ll-data">10</div><div class="ll-next">next→</div></div><div class="ll-lbl">HEAD</div></div>
+    <div class="ll-arrow">⇄</div>
+    <div class="ll-grp"><div class="ll-node"><div class="ll-prev">←prev</div><div class="ll-data">20</div><div class="ll-next">next→</div></div><div class="ll-lbl">Node2</div></div>
+    <div class="ll-arrow">⇄</div>
+    <div class="ll-grp"><div class="ll-node"><div class="ll-prev">←prev</div><div class="ll-data">30</div><div class="ll-next">→NULL</div></div><div class="ll-lbl">TAIL</div></div>
+    <div class="ll-arrow">→</div><div class="ll-null">NULL</div>
+  </div>
+</div>
+<div class="two-col">
+  <div class="hl hl-green"><strong>DLL advantages:</strong><br>• Delete node in O(1) if you have its pointer (you have prev)<br>• Traverse backwards<br>• Used in: LRU cache, browser history, deque</div>
+  <div class="hl hl-red"><strong>DLL disadvantages:</strong><br>• Extra memory: 1 extra pointer per node<br>• Updates 4 pointers per insert/delete (vs 2 in SLL)<br>• More pointer bugs possible</div>
+</div>
+
+<div class="tbl-wrap" style="margin-top:10px">
+<table><thead><tr><th>Feature</th><th>Singly LL</th><th>Doubly LL</th></tr></thead>
+<tbody>
+<tr><td>Pointers per node</td><td>1 (next)</td><td>2 (prev + next)</td></tr>
+<tr><td>Traversal</td><td>Forward only</td><td>Both directions</td></tr>
+<tr><td>Delete with pointer to node</td><td style="color:#C0392B">O(n) — need to find prev</td><td style="color:#1D9E75">O(1) — prev is available</td></tr>
+<tr><td>Memory per node</td><td>Less</td><td>More</td></tr>
+<tr><td>Real-world use</td><td>Stack, simple queue</td><td>LRU cache, browser history</td></tr>
+</tbody></table></div>
+</div><!-- end linked list -->
+
+<!-- ==================== STRINGS ==================== -->
+<div id="pg-strings" class="page">
+<p class="sec">String basics</p>
+<div class="card">
+  <div class="card-body">A <strong>string = sequence of characters</strong> stored in contiguous memory (like a 1D array of chars). In <strong>C</strong>: ends with <code style="font-family:'IBM Plex Mono',monospace">'\0'</code> null terminator. In <strong>Python / Java</strong>: strings are objects that store their length as metadata and are <strong>immutable</strong> (cannot be changed after creation).</div>
+</div>
+<div class="diagram-wrap">
+  <p style="font-size:10.5px;color:#888;margin-bottom:4px">"HELLO" in C-style memory (6 bytes)</p>
+  <div class="diagram">
+    <div class="mem-cell cell-hi"><span class="cell-val">'H'</span><span class="cell-idx">idx 0</span><span class="cell-addr">72</span></div>
+    <div class="mem-cell cell-hi"><span class="cell-val">'E'</span><span class="cell-idx">idx 1</span><span class="cell-addr">69</span></div>
+    <div class="mem-cell cell-hi"><span class="cell-val">'L'</span><span class="cell-idx">idx 2</span><span class="cell-addr">76</span></div>
+    <div class="mem-cell cell-hi"><span class="cell-val">'L'</span><span class="cell-idx">idx 3</span><span class="cell-addr">76</span></div>
+    <div class="mem-cell cell-hi"><span class="cell-val">'O'</span><span class="cell-idx">idx 4</span><span class="cell-addr">79</span></div>
+    <div class="mem-cell cell-re"><span class="cell-val">'\0'</span><span class="cell-idx">idx 5</span><span class="cell-addr">0</span></div>
+  </div>
+</div>
+<p style="font-size:10.5px;color:#C0392B;margin-top:3px;margin-bottom:10px">Red = null terminator (C only). Python/Java store length in the string object — no '\0' needed.</p>
+
+<div class="two-col">
+  <div class="hl hl-red"><strong>Immutable (Python, Java):</strong> Cannot be changed after creation. Every "edit" creates a new string. Loop concatenation is O(n²) — use join() or StringBuilder!</div>
+  <div class="hl hl-green"><strong>Mutable (C char[], C++ string):</strong> Can be modified in-place. Reversal, swaps work without extra memory.</div>
+</div>
+
+<p class="sec">Critical operations</p>
+<div class="card">
+  <div class="card-title">📏 Length — O(1) Python/Java · O(n) C strlen</div>
+  <div class="card-body">Python/Java store length as metadata → O(1). C's strlen scans character-by-character until '\0' → O(n). Classic exam trap!</div>
+</div>
+<div class="card">
+  <div class="card-title">🔗 Concatenation — O(n²) trap in loops</div>
+  <div class="card-body">Each + on an immutable string allocates a new string and copies everything before it.</div>
+  <code class="formula">❌ BAD — O(n²):    result = ""
+                     for w in words: result += w
+
+✅ GOOD — O(n):    result = "".join(words)   # copy once</code>
+</div>
+<div class="card">
+  <div class="card-title">🪞 Palindrome — O(n) time · O(1) space</div>
+  <div class="card-body">Two pointers from both ends moving inward. Compare arr[left] and arr[right]. If any mismatch → not palindrome. If pointers cross → palindrome.</div>
+  <code class="formula">"racecar": l=0,r=6: r==r ✓ → l=1,r=5: a==a ✓ → l=2,r=4: c==c ✓ → l=r=3: crossed → PALINDROME</code>
+</div>
+<div class="card">
+  <div class="card-title">🔀 Anagram check — O(n) time · O(1) space</div>
+  <div class="card-body">Frequency count array of size 26 (lowercase). Increment for string1, decrement for string2. If all counts = 0 → anagrams. Space is O(1) because alphabet is a fixed constant (26).</div>
+</div>
+<div class="card">
+  <div class="card-title">🔍 KMP Pattern Search — O(n+m)</div>
+  <div class="card-body">Precomputes a <strong>failure function</strong> (prefix table) in O(m). For each position in the pattern, stores the length of the longest proper prefix that is also a suffix. During search, when a mismatch occurs, use this table to skip redundant comparisons instead of restarting. Result: O(n) search, never re-examines text characters. Total: O(n+m) vs naive O(nm).</div>
+</div>
+
+<p class="sec">Key concepts</p>
+<div class="two-col">
+  <div class="card">
+    <div class="card-title">📦 Substring vs Subsequence</div>
+    <div class="card-body"><strong>Substring</strong> = contiguous. "ell" ✅ in "hello".<br><strong>Subsequence</strong> = ordered, can skip. "hlo" ✅ in "hello" (skip e, l).<br>All substrings are subsequences; not vice versa.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">🌳 Trie (Prefix Tree)</div>
+    <div class="card-body">Each root-to-node path = a prefix. Insert/search in O(L) where L = string length. Used in autocomplete, spell-check, IP routing.</div>
+  </div>
+</div>
+<div class="tbl-wrap" style="margin-top:10px">
+<table><thead><tr><th>Operation</th><th>Time</th><th>Space</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td>Length (Python/Java)</td><td><span class="pill pg">O(1)</span></td><td>O(1)</td><td>Stored as metadata</td></tr>
+<tr><td>Length (C strlen)</td><td><span class="pill py">O(n)</span></td><td>O(1)</td><td>Scans for '\0'</td></tr>
+<tr><td>Access char[i]</td><td><span class="pill pg">O(1)</span></td><td>O(1)</td><td>Array indexing</td></tr>
+<tr><td>Concatenate s1+s2</td><td><span class="pill py">O(n+m)</span></td><td>O(n+m)</td><td>Copy both</td></tr>
+<tr><td>Loop concat (immutable)</td><td><span class="pill pr">O(n²)</span></td><td>O(n)</td><td>Use join()!</td></tr>
+<tr><td>Palindrome check</td><td><span class="pill py">O(n)</span></td><td>O(1)</td><td>Two pointer</td></tr>
+<tr><td>Anagram check</td><td><span class="pill py">O(n)</span></td><td>O(1)</td><td>Freq array size 26</td></tr>
+<tr><td>Substring (naive)</td><td><span class="pill pr">O(nm)</span></td><td>O(1)</td><td>Brute force</td></tr>
+<tr><td>KMP search</td><td><span class="pill py">O(n+m)</span></td><td>O(m)</td><td>Failure function</td></tr>
+<tr><td>LCS (DP)</td><td><span class="pill pr">O(nm)</span></td><td>O(nm)</td><td>Classic DP table</td></tr>
+<tr><td>Edit distance (DP)</td><td><span class="pill pr">O(nm)</span></td><td>O(nm)</td><td>Insert/delete/replace</td></tr>
+</tbody></table></div>
+</div><!-- end strings -->
+
+<!-- ==================== QUIZ ==================== -->
+<div id="pg-quiz" class="page">
+  <div class="score-bar">
+    <span class="score-txt" id="scoreDisp">Score: 0 / 0</span>
+    <div class="prog"><div class="prog-f" id="progF" style="width:0%"></div></div>
+    <span class="score-txt" id="qDisp">Q 1 of 25</span>
+  </div>
+  <div id="qContainer"></div>
+</div>
+
+</div><!-- end app -->
+
+<script>
+const QBANK=[
+// Complexity tables
+{t:"Complexity",q:"According to your cheat sheet, what is the space complexity of Heap Sort?",opts:["O(n)","O(log n)","O(1)","O(n log n)"],ans:2,exp:"<strong>O(1)</strong> — Heap Sort is in-place. It builds the max-heap inside the original array and extracts elements one by one without needing any additional array."},
+{t:"Complexity",q:"What are the best / average / worst case complexities of Counting Sort?",opts:["O(n)/O(n log n)/O(n²)","O(n+k)/O(n+k)/O(n+k)","O(1)/O(n)/O(n log n)","O(n log n) all cases"],ans:1,exp:"<strong>O(n+k) all cases</strong> — Counting Sort always does the same work: count frequencies (O(n)), scan the count array (O(k)), output (O(n)). k is the range of values. No best/worst variation."},
+{t:"Complexity",q:"From your cheat sheet, inserting at the end of a dynamic array has worst case O(n). Why?",opts:["The array must be searched first","The backing array is full and must resize — all n elements are copied to a new 2× array","The element must be sorted into position","Memory allocation always takes O(n)"],ans:1,exp:"<strong>Resize copies all n elements.</strong> When the internal buffer is full, a new 2× buffer is allocated and every existing element is copied. This happens rarely though — the amortised cost per append is still O(1)."},
+{t:"Complexity",q:"What does 'Delete (known prev)' O(1) mean for a singly linked list?",opts:["You know the index of the node to delete","You already have a pointer to the node just before the one you want to delete, so you just redirect its next pointer","You can hash the node's address","You are always deleting the HEAD node"],ans:1,exp:"<strong>Having the predecessor pointer makes deletion O(1).</strong> To delete node X: predecessor.next = X.next. If you already have the predecessor, this is 2 pointer operations = O(1). If you don't, you need O(n) traversal to find it."},
+{t:"Complexity",q:"What is the auxiliary space of Binary Search (iterative vs recursive)?",opts:["Both O(1)","Iterative O(1), Recursive O(log n)","Both O(log n)","Iterative O(log n), Recursive O(1)"],ans:1,exp:"<strong>Iterative O(1), Recursive O(log n).</strong> Iterative only uses three variables (low, high, mid). Recursive adds a stack frame for each call — depth is O(log n) since the search space halves each time."},
+// Stability & In-place
+{t:"Stability & In-place",q:"Heap Sort is in-place but not stable. Why is it not stable?",opts:["It uses extra memory","Heap operations involve swapping non-adjacent elements, which can change the relative order of equal elements","It requires a sorted input","Its time complexity is O(n²)"],ans:1,exp:"<strong>Non-adjacent swaps break stability.</strong> When the heap is built and elements are extracted, swaps happen between elements far apart in the array. Two equal elements can end up in the wrong relative order through these distant swaps."},
+{t:"Stability & In-place",q:"Counting Sort and Radix Sort are both stable and NOT in-place. What extra space do they need?",opts:["O(log n) for recursion","O(n+k) — a count array of size k and an output array of size n","O(n²) for comparisons","O(1) — they are actually in-place"],ans:1,exp:"<strong>O(n+k) auxiliary space.</strong> Counting Sort needs: a count array of size k (the value range), and an output array of size n to place elements in order. Radix Sort uses Counting Sort internally at each digit position, needing the same O(n+k) per pass."},
+{t:"Stability & In-place",q:"Why is Quick Sort faster in practice than Merge Sort despite the same average O(n log n)?",opts:["Quick Sort has a better worst case","Quick Sort partitions in-place, causing better cache locality. Merge Sort's auxiliary array causes cache misses","Quick Sort uses less comparison","Quick Sort is stable which speeds up equal elements"],ans:1,exp:"<strong>Cache locality and in-place operations.</strong> Quick Sort rearranges within the same memory region — CPUs prefetch nearby data into cache, so it gets cache hits. Merge Sort writes to a separate auxiliary array, causing more cache misses. Constants matter in practice."},
+// Arrays
+{t:"Arrays",q:"For a 2D array arr[3][4] in row-major order, what is the offset (index) of element arr[2][1]?",opts:["5","9","7","6"],ans:1,exp:"<strong>Offset = i×num_cols + j = 2×4 + 1 = 9.</strong> Row 0 occupies offsets 0–3, Row 1 occupies 4–7, Row 2 starts at 8. So [2][1] is at 8+1 = 9 (the 10th element, 0-indexed)."},
+{t:"Arrays",q:"What is the space complexity of a 3D array with dimensions 4×5×6?",opts:["O(15)","O(4+5+6) = O(15)","O(4×5×6) = O(120)","O(6)"],ans:2,exp:"<strong>O(p×q×r) = O(120).</strong> A 3D array holds p×q×r elements, each O(1) space. Total space is the product of all dimensions. In Big-O we write O(n³) for an n×n×n cube, or O(p×q×r) for different dimensions."},
+{t:"Arrays",q:"Why is inserting at the BEGINNING of an array O(n) while inserting at the BEGINNING of a linked list is O(1)?",opts:["Arrays need sorting first","Array insert shifts all n elements right (O(n) moves). Linked list just creates a node and updates the head pointer (2 operations = O(1))","Arrays have slower memory allocation","Linked lists automatically sort elements"],ans:1,exp:"<strong>Array needs n shifts; linked list needs 2 pointer updates.</strong> Array: every element moves one position right to make space at index 0 — n moves. Linked list: newNode.next = head, head = newNode — always 2 operations regardless of list size."},
+{t:"Arrays",q:"A 1D array stores elements at addresses 2000, 2004, 2008, 2012... Each int is 4 bytes. What is the address of arr[5]?",opts:["2020","2024","2016","2028"],ans:0,exp:"<strong>2000 + 5×4 = 2020.</strong> Formula: base + i × element_size = 2000 + 5×4 = 2000 + 20 = 2020. This constant-time address calculation is why arrays have O(1) random access."},
+// Linked Lists
+{t:"Linked Lists",q:"From your cheat sheet: Access/Search in a singly linked list is O(n) because of 'no random access'. What does this mean?",opts:["The list is always unsorted","There is no formula to compute the address of the kth node — you must follow next pointers one step at a time from HEAD","Linked lists cannot store integers","Random numbers are not allowed as values"],ans:1,exp:"<strong>No index-address formula exists.</strong> Unlike arrays where address = base + k×size (O(1)), linked list nodes are scattered in memory. To reach node k, you start at HEAD and follow k next pointers. No shortcut exists — O(k) = O(n) worst case."},
+{t:"Linked Lists",q:"What is the correct order of steps to reverse a singly linked list in-place?",opts:["Swap all data values","Create a new list and copy in reverse order","For each node: save next, point curr.next to prev, advance prev to curr, advance curr to saved next","Use a stack — push all nodes, then pop and relink"],ans:2,exp:"<strong>3-pointer technique.</strong> prev=NULL, curr=HEAD. Each iteration: (1) next=curr.next (save), (2) curr.next=prev (reverse), (3) prev=curr (advance), (4) curr=next (advance). After n iterations, prev = new HEAD. O(n) time, O(1) space."},
+{t:"Linked Lists",q:"Floyd's slow/fast pointer finds the MIDDLE of a list. Where is slow when fast reaches NULL?",opts:["At the beginning","At the middle node","At the last node","At the node before the middle"],ans:1,exp:"<strong>Slow is at the middle.</strong> Fast moves 2× faster than slow. When fast covers n steps (reaching NULL), slow has covered n/2 steps — exactly the middle. For odd length this is the exact middle; for even length it's the first of the two middle nodes."},
+{t:"Linked Lists",q:"Why can't you efficiently use Binary Search on a singly linked list even if it's sorted?",opts:["Linked lists can't be sorted","You can't find the middle in O(1) — it takes O(n) each time, making binary search O(n log n) — worse than just doing linear search O(n)","Linked lists don't store numbers","Binary search only works for even-length arrays"],ans:1,exp:"<strong>Finding the middle costs O(n) each time.</strong> Binary search needs to jump to arr[mid] in O(1). In a linked list, you must traverse from HEAD to reach the middle — O(n). So each 'binary search step' costs O(n), giving O(n log n) total. Stick to linear search O(n)."},
+// Strings
+{t:"Strings",q:"From your cheat sheet: Concatenation is O(n)/O(n)/O(n) with O(n) space. What causes this?",opts:["String hashing takes O(n)","A new string of combined length must be allocated and both strings copied into it — proportional to total length","Memory garbage collection takes O(n)","Characters must be sorted during concatenation"],ans:1,exp:"<strong>New allocation + copy of both strings.</strong> s1+s2 creates a new string of length n+m, copies all n characters of s1 and all m characters of s2. Total work = O(n+m). The old strings are still in memory (if immutable) until garbage collected."},
+{t:"Strings",q:"Your cheat sheet says KMP uses O(m) space. What is this O(m) used for?",opts:["Copying the text","Storing the failure function (prefix table) — an array of size m, one entry per pattern character","Sorting the pattern","Storing all match positions"],ans:1,exp:"<strong>The failure function array of size m.</strong> KMP precomputes for each position in the pattern (length m) the length of the longest proper prefix that is also a suffix. This array of m integers enables skipping redundant comparisons during search, achieving O(n+m) total."},
+{t:"Strings",q:"'Naive substring' worst case is O(nm). Give a scenario that triggers this worst case.",opts:["Random text and pattern","Text = 'aaaaaa...a' (n a's), Pattern = 'aaa...ab' — matches all but the last char at nearly every position, forcing n×m comparisons","Sorted text and pattern","Pattern longer than text"],ans:1,exp:"<strong>Text = 'aaaa...a', Pattern = 'aaa...ab'.</strong> At each of the n starting positions, the algorithm matches m-1 characters before failing on the last one (b vs a). So n×(m-1) ≈ O(nm) comparisons. KMP avoids this by not re-examining characters after a partial match."},
+{t:"Strings",q:"What is the difference between 'Substring' and 'Subsequence'?",opts:["They are the same thing","Substring = consecutive characters; Subsequence = characters in order but can skip positions","Substring can skip; Subsequence must be consecutive","Subsequences must be longer than substrings"],ans:1,exp:"<strong>Substring is contiguous; Subsequence can skip.</strong> For 'hello': 'ell' = substring (positions 1,2,3 consecutive). 'hlo' = subsequence (h at 0, l at 2, o at 4 — positions 1 and 3 skipped). Every substring is a subsequence but not vice versa."},
+{t:"Strings",q:"C's strlen() is O(n) but Python's len() is O(1). Why the difference?",opts:["Python strings are shorter","C strings end with '\\0' so strlen must scan every character to find it. Python stores the string length as an integer field — len() just reads it","Python uses faster hardware","C strings store length at a different memory location"],ans:1,exp:"<strong>C: scan for '\\0'. Python: read stored length.</strong> C has no length metadata — strlen must iterate character-by-character until it finds the null terminator. Python's string object has a 'length' field computed when the string is created, so len() is a single memory read: O(1)."},
+{t:"Sorting",q:"Your cheat sheet says Radix Sort does 'digit-by-digit sort'. What is the key requirement for Radix Sort to work correctly?",opts:["The numbers must be pre-sorted","The sub-sort used at each digit position must be stable — otherwise relative order between digits is lost","Numbers must be positive","The array must have even length"],ans:1,exp:"<strong>Stable sub-sort at each digit pass.</strong> Radix Sort processes digits from least to most significant (LSD). For the result to be correct after each pass, equal-valued digits must keep their relative order from the previous pass. Counting Sort (stable) is used as the sub-sort for exactly this reason."},
+{t:"Sorting",q:"Tim Sort has best case O(n). When does this happen?",opts:["When the array is reverse sorted","When the array is already sorted or consists of already-sorted runs — no merges needed","When all elements are equal","When the array has only 2 elements"],ans:1,exp:"<strong>Already sorted or nearly sorted input.</strong> Timsort detects 'natural runs' (already-sorted sequences). If the entire array is one sorted run, the insertion sort phase confirms it in O(n) and no merges are needed. This is Timsort's best case: O(n)."},
+{t:"Search",q:"From your cheat sheet: Linear Search checks 'each element' — best O(1), worst O(n). What is the best case scenario?",opts:["The array is sorted","The target element is the very first element (index 0) — found in 1 comparison","The array has 1 element","The target is at the middle"],ans:1,exp:"<strong>Target at index 0 = 1 comparison = O(1).</strong> Linear search checks elements left to right. If the target is immediately at position 0, it's found after the very first comparison. This is the best case. Worst case: target at the end or not present = n comparisons."},
+{t:"Search",q:"Binary Search 'halves search space' — how many comparisons for n = 1,000,000?",opts:["1,000,000","500,000","~20","~1000"],ans:2,exp:"<strong>~20 comparisons.</strong> log₂(1,000,000) ≈ 19.9. Each comparison halves the remaining search space: 1M → 500K → 250K → ... → 1. This illustrates why O(log n) is so powerful — a million elements needs only 20 comparisons vs 1 million for linear search."},
+];
+
+let idx=0,score=0,answered=false;
+const qs=[...QBANK].sort(()=>Math.random()-.5);
+
+function show(page,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pg-'+page).classList.add('active');
+  btn.classList.add('active');
+  if(page==='quiz'&&idx===0)renderQ();
+}
+
+function renderQ(){
+  const total=qs.length;
+  document.getElementById('scoreDisp').textContent=`Score: ${score} / ${Math.min(idx,total)}`;
+  document.getElementById('qDisp').textContent=`Q ${Math.min(idx+1,total)} of ${total}`;
+  document.getElementById('progF').style.width=((idx/total)*100)+'%';
+  if(idx>=total){
+    const pct=Math.round(score/total*100);
+    document.getElementById('qContainer').innerHTML=`<div class="result-box">
+      <div style="font-size:34px;margin-bottom:6px">${pct>=80?'🏆':pct>=60?'🎯':'💪'}</div>
+      <div style="font-size:13px;color:#888;margin-bottom:4px">Final Score</div>
+      <div class="big">${score} / ${total}</div>
+      <div style="font-size:13px;color:#888;margin-bottom:1rem">${pct}% — ${pct>=80?'Excellent — exam ready!':pct>=60?'Good — review the ones you missed.':'Keep studying — you\'re getting there!'}</div>
+      <div class="stat-row">
+        <div class="stat-box"><div class="sv" style="color:#1D9E75">${score}</div><div class="sl">correct</div></div>
+        <div class="stat-box"><div class="sv" style="color:#C0392B">${total-score}</div><div class="sl">wrong</div></div>
+        <div class="stat-box"><div class="sv">${total}</div><div class="sl">total</div></div>
+      </div>
+      <button class="next-btn" style="margin-top:1.4rem" onclick="idx=0;score=0;answered=false;renderQ()">Retry all questions</button>
+    </div>`;
+    return;
+  }
+  const q=qs[idx];answered=false;
+  const letters=['A','B','C','D'];
+  let html=`<div class="q-card"><div style="margin-bottom:7px"><span class="badge bb">${q.t}</span></div>
+    <div class="q-text">${q.q}</div><div class="opts">`;
+  q.opts.forEach((o,i)=>{html+=`<button class="opt" id="opt${i}" onclick="answer(${i})"><span class="opt-l">${letters[i]}</span><span>${o}</span></button>`;});
+  html+=`</div><div id="expDiv"></div><div id="nextDiv" style="display:none">
+    <button class="next-btn" onclick="nextQ()">${idx+1<qs.length?'Next →':'See results →'}</button></div></div>`;
+  document.getElementById('qContainer').innerHTML=html;
+}
+
+function answer(chosen){
+  if(answered)return; answered=true;
+  const q=qs[idx];
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  document.getElementById('opt'+q.ans).classList.add('correct');
+  if(chosen!==q.ans)document.getElementById('opt'+chosen).classList.add('wrong');
+  else score++;
+  document.getElementById('expDiv').innerHTML=`<div class="exp-box">${q.exp}</div>`;
+  document.getElementById('nextDiv').style.display='block';
+  document.getElementById('scoreDisp').textContent=`Score: ${score} / ${idx+1}`;
+}
+function nextQ(){idx++;renderQ();}
+</script>
+</body>
+</html>
